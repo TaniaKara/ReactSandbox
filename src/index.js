@@ -1,9 +1,5 @@
-'use strict'
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-
 
 class Item extends React.Component {
     constructor(props) {
@@ -17,24 +13,17 @@ class Item extends React.Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick() {
-        if(!this.state.isDone) {
-            this.setState({
-                isDone: !this.state.isDone,
-                itemStyle: {"textDecoration": "line-through"}
-            });            
-        } else {
-            this.setState({
-                isDone: !this.state.isDone,
-                itemStyle: {"textDecoration": ""}
-            });
-        }
+    handleClick(e) {
+        (!this.state.isDone) ? this.setState({itemStyle : {"textDecoration": "line-through"}}) 
+                             : this.setState({itemStyle: {"textDecoration": ""}});
+
+        this.setState({isDone: !this.state.isDone});        
     }
 
     render() {
         return (
-            <ul               
-                style = {this.state.itemStyle}
+            <ul 
+                style = {this.state.itemStyle} 
                 onClick = {this.handleClick}
             >
                 {this.props.item}
@@ -56,19 +45,18 @@ class NewItem extends React.Component {
 
     handleAddNewItemClick(e) {
         return;
+        // push new item to the products list
     }
 
     render() {
         return(
             <form>
-                <input 
-                    type = "text" 
+                <input type = "text" 
                     placeholder = "New Item..." 
                     value = {this.props.newItemText}
                     onChange = {this.handleNewItemTextChange}
                 />
-                <button 
-                    type = "submit"
+                <button type = "submit"
                     onClick = {this.handleAddNewItemClick}
                 >
                     Add
@@ -79,21 +67,14 @@ class NewItem extends React.Component {
 }
 
 class ToDoItemList extends React.Component {     
-    render() {
-        const items = this.props.items;   
-        const toDoList = [];
+    render() {        
+        let toDoList = [];
         
-        for(let item of items) {
-            if(item){
-                toDoList.push(
-                    <Item 
-                        item = {item} 
-                        key = {items.indexOf(item)}                        
-                    />
-                );
-            }
-        }
-            return(
+        toDoList = this.props.items.map((item, index) => 
+             <Item item = {item} key = {index}/> 
+        );
+
+        return(
             <div>
                 {toDoList}
             </div>
@@ -107,7 +88,6 @@ class ToDoList extends React.Component {
         this.state = {
             newItemText: ''
         }
-
         this.handleNewItemTextChange = this.handleNewItemTextChange.bind(this);
     }
 
@@ -120,8 +100,7 @@ class ToDoList extends React.Component {
     render() {
         return(
             <div>
-                <NewItem 
-                    newItemText = {this.state.newItemText}
+                <NewItem newItemText = {this.state.newItemText}
                     onNewItemTextChange = {this.handleNewItemTextChange} />
                 <ToDoItemList items = {this.props.items} />
             </div>
